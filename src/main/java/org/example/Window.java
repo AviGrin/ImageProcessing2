@@ -2,7 +2,7 @@ package org.example;
 import javax.swing.*;
 
 public class Window extends JFrame {
-    public static final int WIDTH = 1100;
+    public static final int WIDTH = 1115;
     public static final int HEIGHT = 600;
 
     public Window () {

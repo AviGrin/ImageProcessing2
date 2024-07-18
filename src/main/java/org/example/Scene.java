@@ -51,45 +51,55 @@ public class Scene extends JPanel {
             originalImage=filters.adjutByScale(originalImage);
             newImage=originalImage;
             combinedImage= new BufferedImage(originalImage.getWidth(),originalImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
-            lineX=1;
+            lineX=originalImage.getWidth()/2;
             g2d = combinedImage.createGraphics();
             g2d.drawImage(originalImage, 0, 0, null);
             BufferedImage temp = newImage.getSubimage(0,0,lineX,originalImage.getHeight());
             g2d.drawImage(temp, 0, 0,null);
             g2d.setColor(Color.RED);
             g2d.fillRect(temp.getWidth()-1, 0, 2, combinedImage.getHeight());
-            addMouseListener(new MouseAdapter() {
-                @Override
-                public void mousePressed(MouseEvent e) {
-                    if(e.getX()>lineX-2&&e.getX()<lineX+2&&e.getX()>originalImage.getWidth()&&e.getY()<originalImage.getHeight()){
-                        {
-                            isPressed=true;
-                            lineX=e.getX();
-
-                        }
-
-
-                    }else {
-                    repaint();}
-                }
-
-                @Override
-                public void mouseReleased(MouseEvent e) {
-
-
-                    isPressed=false;
-                    repaint();
-                }
-            });
+//            addMouseListener(new MouseAdapter() {
+//                @Override
+//                public void mousePressed(MouseEvent e) {
+//                    if(e.getX()>lineX-2&&e.getX()<lineX+2&&e.getX()>originalImage.getWidth()&&e.getY()<originalImage.getHeight()){
+//                        {
+//                            isPressed=true;
+//                            lineX=e.getX();
+//
+//                        }
+//
+//
+//                    }
+//                    repaint();
+//                }
+//
+//                @Override
+//                public void mouseReleased(MouseEvent e) {
+//
+//
+//                    isPressed=false;
+//                    repaint();
+//                }
+//            });
             addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseDragged(MouseEvent e) {
 
-                        if(e.getX()>1&&e.getX()<originalImage.getWidth()-1){
+                        if(e.getX()>0&&e.getX()<combinedImage.getWidth()-1&&e.getX()<originalImage.getWidth()){
                             lineX = e.getX();
                             repaint();
                         }
 
+                }
+            });
+            addMouseMotionListener(new MouseAdapter() {
+                @Override
+                public void mouseMoved(MouseEvent e) {
+                    if(e.getX()>0&&e.getX()<combinedImage.getWidth()-1&&e.getX()<originalImage.getWidth()){
+                        lineX = e.getX();
+                        repaint();
+                    }
+                    repaint();
                 }
             });
 
@@ -103,8 +113,8 @@ public class Scene extends JPanel {
             g2d.drawImage(originalImage, 0, 0, null);
             BufferedImage temp = newImage.getSubimage(0,0,lineX,originalImage.getHeight());
             g2d.drawImage(temp, 0, 0,null);
-            g2d.setColor(Color.RED);
-            g2d.fillRect(lineX-1, 0, 1, combinedImage.getHeight());}
+            g2d.setColor(Color.blue);
+            g2d.fillRect(lineX-1, 0, 3, combinedImage.getHeight());}
         super.repaint();
     }
 
