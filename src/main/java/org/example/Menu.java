@@ -3,15 +3,28 @@ import javax.swing.*;
 import java.awt.*;
 
 public class Menu extends JPanel {
-    boolean didHePickPicture;
-    public Menu () {
+    private Scene scene;
+    private boolean didHePickPicture;
+    public Menu (Scene scene) {
+        this.scene=scene;
         didHePickPicture=false;
         this.setBounds(0, 0, 100, 600);
         this.setBackground(Color.RED);
 
     }
-    public void PickedPicture(){
+    public  void PickedPicture(){
         didHePickPicture=true;
+        JButton blackToWhite = new JButton("From black to white");
+        blackToWhite.setBounds(5,5,90,60);
+        blackToWhite.addActionListener(e -> {
+            scene.BlackToWhite();
+
+
+        });
+        this.add(blackToWhite);
+        repaint();
+
+
 
     }
     @Override

@@ -1,6 +1,8 @@
 package org.example;
 
 import org.w3c.dom.Node;
+import java.awt.Graphics2D;
+
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,9 +22,14 @@ public class Scene extends JPanel {
     private FiltersAndAdjustments filters;
     private int lineX;
     public boolean isPressed =false;
+    public Menu menu;
 
+    public Menu getMenu() {
+        return menu;
+    }
 
     public Scene () {
+
         filters=new FiltersAndAdjustments();
         this.setBounds(100, 0, 1000, 600);
         this.setBackground(Color.GRAY);
@@ -35,6 +42,8 @@ public class Scene extends JPanel {
         });
         openButton.setSize(100,50);
         add(openButton);
+        this.menu = new Menu(this);
+
 
     }
     private void openImage() {
@@ -49,8 +58,9 @@ public class Scene extends JPanel {
                 ex.printStackTrace();
             }
             originalImage=filters.adjutByScale(originalImage);
-            newImage=originalImage;
+            newImage=copyImage(originalImage);
             combinedImage= new BufferedImage(originalImage.getWidth(),originalImage.getHeight(),BufferedImage.TYPE_INT_ARGB);
+
             lineX=originalImage.getWidth()/2;
             g2d = combinedImage.createGraphics();
             g2d.drawImage(originalImage, 0, 0, null);
@@ -58,6 +68,7 @@ public class Scene extends JPanel {
             g2d.drawImage(temp, 0, 0,null);
             g2d.setColor(Color.RED);
             g2d.fillRect(temp.getWidth()-1, 0, 2, combinedImage.getHeight());
+            menu.PickedPicture();
 //            addMouseListener(new MouseAdapter() {
 //                @Override
 //                public void mousePressed(MouseEvent e) {
@@ -81,25 +92,31 @@ public class Scene extends JPanel {
 //                    repaint();
 //                }
 //            });
-            addMouseMotionListener(new MouseAdapter() {
-                @Override
-                public void mouseDragged(MouseEvent e) {
-
-                        if(e.getX()>0&&e.getX()<combinedImage.getWidth()-1&&e.getX()<originalImage.getWidth()){
-                            lineX = e.getX();
-                            repaint();
-                        }
-
-                }
-            });
+//            addMouseMotionListener(new MouseAdapter() {
+//                @Override
+//                public void mouseDragged(MouseEvent e) {
+//
+//                        if(e.getX()>0&&e.getX()<combinedImage.getWidth()-1&&e.getX()<originalImage.getWidth()){
+//                            lineX = e.getX();
+//                            repaint();
+//                        }
+//
+//                }
+//            });
             addMouseMotionListener(new MouseAdapter() {
                 @Override
                 public void mouseMoved(MouseEvent e) {
                     if(e.getX()>0&&e.getX()<combinedImage.getWidth()-1&&e.getX()<originalImage.getWidth()){
                         lineX = e.getX();
                         repaint();
+                        g2d.drawImage(originalImage, 0, 0, null);
+                        BufferedImage temp = newImage.getSubimage(0,0,lineX,originalImage.getHeight());
+                        g2d.drawImage(temp, 0, 0,lineX,originalImage.getHeight(),null);
+                        g2d.setColor(Color.RED);
+                        g2d.fillRect(temp.getWidth()-1, 0, 2, originalImage.getHeight());
+
                     }
-                    repaint();
+
                 }
             });
 
@@ -107,21 +124,30 @@ public class Scene extends JPanel {
 
         }
     }
-    public  void repaint()
-    {
-        if(originalImage!=null){
-            g2d.drawImage(originalImage, 0, 0, null);
-            BufferedImage temp = newImage.getSubimage(0,0,lineX,originalImage.getHeight());
-            g2d.drawImage(temp, 0, 0,null);
-            g2d.setColor(Color.blue);
-            g2d.fillRect(lineX-1, 0, 3, combinedImage.getHeight());}
-        super.repaint();
+    public void BlackToWhite(){
+        BufferedImage temp = copyImage(originalImage);
+        this.newImage=filters.BlackToWhite(temp);
+
+        repaint();
     }
+    public  BufferedImage copyImage(BufferedImage originalImage) {
+        BufferedImage copy = new BufferedImage(
+                originalImage.getWidth(),
+                originalImage.getHeight(),
+                originalImage.getType()
+        );
+        Graphics2D g2d = copy.createGraphics();
+        g2d.drawImage(originalImage, 0, 0, null);
+        g2d.dispose();
+        return copy;
+    }
+
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if(originalImage!=null) {
             g.drawImage(combinedImage,0,0,this);
+
 
 
         }

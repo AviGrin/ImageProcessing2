@@ -11,10 +11,10 @@ public class Window extends JFrame {
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setLayout(null);
-        Menu menu = new Menu();
-        this.add(menu);
         Scene scene = new Scene();
         this.add(scene);
+
+        this.add(scene.getMenu());
         this.setVisible(true);
     }
 
